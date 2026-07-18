@@ -13,7 +13,8 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
-
+import { errorHandler } from "./middleware/error.middleware";
+import authRoutes from "./routes/auth.routes";
 const app = express();
 
 // Middlewares
@@ -32,5 +33,11 @@ app.get("/", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+
+app.use("/api/auth",authRoutes)
+
+// Global error handler (always last)
+app.use(errorHandler)
 
 export default app;

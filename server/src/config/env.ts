@@ -6,7 +6,6 @@ dotenv.config();
 export const env = cleanEnv(process.env, {
   PORT: port({ default: 5000 }),
   NODE_ENV: str({ default: "development" }),
-  MONGO_URI: str(),
   JWT_SECRET: str(),
   JWT_REFRESH_SECRET: str(),
   REDIS_HOST: str({ default: "localhost" }),
