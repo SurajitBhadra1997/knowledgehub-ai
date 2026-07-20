@@ -15,6 +15,9 @@ import compression from "compression";
 import morgan from "morgan";
 import { errorHandler } from "./middleware/error.middleware";
 import authRoutes from "./routes/auth.routes";
+import documentRoutes from "./routes/document.routes";
+import { redis } from "./lib/redis";
+import { serverAdapter } from "./config/bullboard";
 const app = express();
 
 // Middlewares
@@ -34,8 +37,14 @@ app.get("/", (req, res) => {
   });
 });
 
+redis.on("connect", () => {
+  console.log("✅ Redis Connected");
+});
+
+app.use("/admin/queues", serverAdapter.getRouter());
 
 app.use("/api/auth",authRoutes)
+app.use("/api/documents",documentRoutes)
 
 // Global error handler (always last)
 app.use(errorHandler)

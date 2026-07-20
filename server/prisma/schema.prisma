@@ -12,6 +12,14 @@ enum UserRole {
   USER
 }
 
+enum DocumentStatus {
+  UPLOADED
+  PROCESSING
+  READY
+  FAILED
+}
+
+
 model User {
   id           String   @id @default(uuid())
   firstName    String
@@ -20,7 +28,33 @@ model User {
   passwordHash String
   role         UserRole @default(USER)
   isActive     Boolean  @default(true)
-
+  documents Document[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model Document {
+  id          String         @id @default(uuid())
+  title       String
+  fileName    String
+  filePath    String
+  mimeType    String
+  fileSize    Int
+
+  status      DocumentStatus @default(UPLOADED)
+
+  extractedText String?      @db.Text
+
+  uploadedBy  String
+  user        User           @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([uploadedBy])
+  @@index([status])
+}
+
+
+
+
